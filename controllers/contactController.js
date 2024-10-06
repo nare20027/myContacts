@@ -18,12 +18,38 @@ module.exports = getAllContacts;
 
 const asyncHandler = require('express-async-handler'); // asyncHandler import --> 미들웨어 설치 필요 
 const Contact = require('../models/contactModel');
+const path = require('path');
 
 //@desc Get all contacts :> @desc : 함수설명,  모든 연락처 정보를 가져오는 함수
 //@route Get /contacts :> @route : 요청방식과 URL
 const getAllContacts = asyncHandler(async (req, res) => {  // 비동기 방식 처리
     const contacts = await Contact.find();
-    res.status(200).send(contacts);    
+    res.render('index', { contacts: contacts}); // contacts model에서 가져온 자료를 contacts 변수에 저장해 index.ejs 파일로 넘겨라
+    /*
+    const users = [
+        { name: 'John', email: 'john@aaa.bbb', phone: '123456789'},
+        { name: 'Jane', email: 'jane@aaa.bbb', phone: '67891234'},
+    ];
+    res.render("getAll", { heading: "User List", users: users});
+    */
+    /*
+        동적파일 연결 
+        res.status(200).send("<h1 style ='color:green'>Contacts Page</h1>");
+    */
+    /*  
+        정적 파일 연결
+        const filePath = path.join(__dirname,"../assets", "getAll.html");
+        res.sendFile(filePath);
+    */
+   //EJS 파일 연결 ===> res.render(); views 폴더에 있는 getAll.ejs 파일 렌더링
+   /*
+     컨트롤러에서 템플릿 파일로 값 넘기기
+     res.render(ejs 파일, {변수 : 전송 자료}) 
+     1. 매개변수와 연결할 ejs 파일
+     2. 컨트롤러에서 전달하는 변수명
+     3. 컨트롤러에서 전달하는 자료 
+   */
+    
 });
 
 //@desc Create a contact

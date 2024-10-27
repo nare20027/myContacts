@@ -1,5 +1,6 @@
 const express = require('express');
 const dbConnect = require('./config/dbConnect') // mongoose 연결 
+const methodOverride = require('method-override') // 미들웨어 연결 
 
 const app = express(); // express 실행으로 app 서버 생성
 //템플릿 엔진 연결
@@ -7,6 +8,7 @@ app.set('view engine', 'ejs');
 app.set('views', './views');
 //정적 파일 연결---> public 폴더 안의 파일을 사용할 수 있다. 
 app.use(express.static('./public'));
+app.use(methodOverride('_method'));
 const port = 3000;
 
 dbConnect();

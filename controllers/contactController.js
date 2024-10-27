@@ -52,6 +52,12 @@ const getAllContacts = asyncHandler(async (req, res) => {  // 비동기 방식 �
     
 });
 
+//@desc View and add contact form
+//@route GET /contacts/add
+const addContactForm = (req, res) => {
+    res.render('add'); // views/add.ejs 렌더링
+};
+
 //@desc Create a contact
 //@route Post /contacts
 const createContact = asyncHandler(async(req, res) => {
@@ -64,15 +70,14 @@ const createContact = asyncHandler(async(req, res) => {
     const contact = await Contact.create({name, email, phone});
 
     // status code 201 : 자료가 새로 만들어진 상태 
-    res.status(201).send('Create Contacts');
+    res.redirect("/contacts");
 });
 
 //@desc get a contact
 //@route Get /contacts/:id
 const getContact = asyncHandler(async(req, res) => {
-    const name = req.params.id;
-    const contact = await Contact.findOne({name : name});
-    res.status(200).send(contact);
+    const contact = await Contact.findById(req.params.id);
+    res.render("update", {contact: contact});
 });
 
 //@desc update a contact
@@ -87,7 +92,7 @@ const updateContact = asyncHandler(async(req, res) => {
         {name, email, phone},
         {new : true} // 수정한 결과를 화면에 보여주고 싶을 때 사용 
     )
-    res.status(200).send(updatedContact);
+    res.redirect("/contacts")
     /*
     const contact = await Contact.findById(id);
     if(!contact) {
@@ -110,7 +115,7 @@ const updateContact = asyncHandler(async(req, res) => {
 //@desc delete a contact
 //@route Delete /contacts/:id
 const deleteContact = asyncHandler(async(req, res) => {
-    const contact = await Contact.findById(req.params.id);
+/*  const contact = await Contact.findById(req.params.id);
     if(!contact) {
         res.status(404);
         throw new Error('Contact not found!');
@@ -118,6 +123,9 @@ const deleteContact = asyncHandler(async(req, res) => {
     await Contact.deleteOne();
 
     res.status(200).send(`Delete Contact for ID : ${req.params.id}`);
+*/
+    await Contact.findByIdAndDelete(req.params.id);
+    res.redirect('/contacts');
 });
 
-module.exports = {getAllContacts, createContact, getContact, updateContact, deleteContact};
+module.exports = {getAllContacts, createContact, getContact, updateContact, deleteContact, addContactForm,};

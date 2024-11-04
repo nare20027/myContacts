@@ -13,12 +13,13 @@ const port = 3000;
 
 dbConnect();
 
+/*
 app.route('/').get((req, res) => {
     res.status(200);
     res.send('Hello Node!');
 
 });
-
+*/
 /* 
     app.use 미들웨어 등록 app.use([경로], 미들웨어)
     경로를 지정하면 그 경로를 요청할 때만 해당 미들웨어를 사용하겠다는 뜻이다.
@@ -32,6 +33,7 @@ app.use(express.json());
     urlencoded({extended:true}) :> qs모듈(중첩객체 표현 가능 {name:"", phone:"", email""})을 사용해 쿼리스트링 해석 
     */
 app.use(express.urlencoded({ extended: true}));
+app.use('/', require('./routes/loginRoutes'));
 app.use('/contacts', require('./routes/contactsRoutes'));
 
 

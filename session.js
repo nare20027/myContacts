@@ -16,28 +16,31 @@ const app = express();
 */
 app.use(
   session({
-    secret: "secret code",
-    resave: false,
-    saveUninitialized: true,
-    store: MongoStore.create({ mongoUrl: process.env.DB_CONNECT }),
-    cookie: { MaxAge: 60 * 60 * 24 * 1000 },
+    secret: "secret code",            // 세션 비밀키
+    resave: false,                    // 변경할 내용이 없으면 다시 저장하지 않음
+    saveUninitialized: true,          // 초기화되지 않은 세션 저장
+    store: MongoStore.create({ mongoUrl: process.env.DB_CONNECT }),   // MongoDB에 세션 저장
+    cookie: { MaxAge: 60 * 60 * 24 * 1000 },  // 쿠키 유효기간을 24시간으로 지정(밀리초 단위)
   })
 );
 
 app.get("/", (req, res) => {
-  if (req.session.count) {
-    req.session.count++;
+  if (req.session.count) {  // 세션에 count가 있다면
+    req.session.count++;    // count값을 1증가 시키고
+    // 세션에 저장된 count 값을 가져와 출력한다.
     res.send(`${req.session.count}번째 방문입니다.`);
-  } else {
-    req.session.count = 1;
-    res.send("첫 번째 방문입니다.");
+  } else {  // 세션에 count값이 없다면
+    req.session.count = 1;  // count를 추가하고
+    res.send("첫 번째 방문입니다."); // 첫 방문임을 알려준다. 
   }
 });
 
-app.get("/session", (req, res) => {
+// 세션정보를 활용해 경로로 접속했을 때 세션 ID 정보 표시 
+app.get("/session", (req, res) => { 
   res.send(`session ID : ${req.sessionID}`);
 });
 
+// 세션 정보 삭제
 app.get("/delete-session", (req, res) => {
   req.session.destroy((err) => {
     if (err) {
